@@ -58,8 +58,8 @@ Work around this by editing ./ephemeral-hdfs/conf/hdfs-site.xml  and setting
 
 You then need to copy this to all nodes and restart the ephemeral-hdfs service  (this issue also applies to persistent HDFS and the fix is the same, just s/ephemeral/persistent 
 
-```./spark-ec2/copy-dir.sh ~/ephemeral-hdfs/conf/```
-
-```./ephemeral-hdfs/bin/stop-all.sh```
-
-```./ephemeral-hdfs/bin/start-all.sh```
+```
+./spark-ec2/copy-dir.sh ~/ephemeral-hdfs/conf/
+./ephemeral-hdfs/bin/stop-all.sh
+./ephemeral-hdfs/bin/start-all.sh
+```
