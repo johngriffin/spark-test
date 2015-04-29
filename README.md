@@ -9,27 +9,35 @@ Simple Apache Spark test task to be run on EC2.  Does a word count on Alice in W
 
 These steps should be run consecutively, and should work just by copying and pasting the code, with a few substitutions as noted.
 
-1.  Use spark-ec2 script to spin up a cluster on our Groupseer AWS account.  Set AWS keys, instance type, cluster name and number of slaves (-s) as appropriate.
+* Use spark-ec2 script to spin up a cluster on our Groupseer AWS account.  Set AWS keys, instance type, cluster name and number of slaves (-s) as appropriate.
+
 ```cd /usr/local/Cellar/apache-spark/1.3.1/libexec/ec2```
+
 ```export AWS_SECRET_ACCESS_KEY=...```
+
 ```export AWS_ACCESS_KEY_ID=...```
+
 ```./spark-ec2 --key-pair=my-key --identity-file=/path/to/.ssh/my-key.pem --instance-type=m3.medium --region=eu-west-1  -s 3 launch my-cluster-name```
 
 There should be URL at the end of the console output for a web UI running on the master node, e.g:  http://ec2-52-17-68-78.eu-west-1.compute.amazonaws.com:8080
 
-2.  SSH in to master
+* SSH in to master
+
 ```./spark-ec2 -k groupseer-spark -i ~/.ssh/groupseer-spark.pem --region=eu-west-1 login my-cluster-name```
 
-3.  Get code from git onto master (assume logged into master, see step 3)
+* Get code from git onto master (assume logged into master, see step 3)
+
 ```git clone https://github.com/johngriffin/spark-test.git```
 
-4.  Copy code to all nodes
+* Copy code to all nodes
+
 ```./spark-ec2/copy-dir.sh ~/spark-test/```
 
-5.  Start Job
+* Start Job
+
 ```./spark/bin/spark-submit spark-test/wordcount.py```
 
-6.  View logs - go to the web UI, click into the job, then into each worker, there are links to stderr and stdout.  
+* View logs - go to the web UI, click into the job, then into each worker, there are links to stderr and stdout.  
 
 
 ##Notes
@@ -41,14 +49,17 @@ There should be URL at the end of the console output for a web UI running on the
 
 Work around this by editing ./ephemeral-hdfs/conf/hdfs-site.xml  and setting
 
-```<property>
+```
+<property>
     <name>dfs.replication</name>
     <value>1</value>
-</property>```
+</property>
+```
 
 You then need to copy this to all nodes and restart the ephemeral-hdfs service  (this issue also applies to persistent HDFS and the fix is the same, just s/ephemeral/persistent 
 
-```./spark-ec2/copy-dir.sh ~/ephemeral-hdfs/conf/
-./ephemeral-hdfs/bin/stop-all.sh
-./ephemeral-hdfs/bin/start-all.sh
-```
+```./spark-ec2/copy-dir.sh ~/ephemeral-hdfs/conf/```
+
+```./ephemeral-hdfs/bin/stop-all.sh```
+
+```./ephemeral-hdfs/bin/start-all.sh```
